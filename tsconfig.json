@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
+    "target": "ES6",
+    "module": "system",
+    "outFile": "bundle.js",
     "strict": true
-  }
+  },
+  "include": ["app.ts"]
 }
