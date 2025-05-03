@@ -63,30 +63,82 @@ async function loadItems() {
   prevPageButton.hidden = json.pagination.page <= 1;
   nextPageButton.hidden = json.pagination.page >= maxPage;
 
-  type Result = {
-    error: string;
-    items: Item[];
+  //  正確定義 item 陣列
+  let items: Item[] = json.items;
+  console.log("items:", items);
+
+  // 第一步：定義介面類型（搬到最頂）
+  // 第1步：定義 YogaPose 資料結構
+  export interface YogaPose {
+    id: number;
+    title: string;
+    level: string;
+    category: string;
+    type: string;
+    bodypart: string;
+    benefits: string;
+    caution: string;
+    practice: string;
+    tags: string[];
+    imageUrl: string;
+    videoUrl: string;
+  }
+
+  // 第2步：定義 Result 資料結構，包含 YogaPose 陣列同分頁資料
+  type YogaPoseResult = {
+    error: string; // 可能係 API 回傳錯誤訊息
+    items: YogaPose[]; // 用 YogaPose 陣列包裝所有瑜伽動作資料
     pagination: {
-      page: number;
-      limit: number;
-      total: number;
+      page: number; // 當前頁碼
+      limit: number; // 每頁顯示數量
+      total: number; // 總數量
     };
   };
 
-  type Item = {
-    id: number;
-    tags: string[];
-    license: string;
-    schematic_url: string;
-    manufacturer: string;
-    title: string;
-    description: string;
-    category: string;
-    image_url: string;
-    video_url: string;
-    published_at: string;
-    components: string[];
+  // 假設你從 API 獲得回應，使用 YogaPoseResult 來接收
+  const yogaPoseResult: YogaPoseResult = {
+    error: "", // 沒有錯誤
+    items: [
+      // 這裏放 YogaPose 資料
+      {
+        id: 1,
+        title: "下犬式",
+        level: "初階",
+        category: "拉伸",
+        type: "拉伸",
+        bodypart: "腿部",
+        benefits: "伸展腿部肌肉",
+        caution: "避免膝蓋疼痛時練習",
+        practice: "雙手雙腳撐地，臀部抬高，呈倒V字形。",
+        tags: ["腿部", "背部", "伸展"],
+        imageUrl: "https://example.com/downward-dog.jpg",
+        videoUrl: "https://youtube.com/example",
+      },
+      {
+        id: 2,
+        title: "英雄式",
+        level: "中階",
+        category: "強化",
+        type: "強化",
+        bodypart: "腿部",
+        benefits: "增強大腿肌肉力量",
+        caution: "膝蓋有問題時應避免",
+        practice: "雙膝跪地，臀部與膝蓋成一線，背部保持直立。",
+        tags: ["腿部", "強化", "核心"],
+        imageUrl: "https://example.com/hero-pose.jpg",
+        videoUrl: "https://youtube.com/example2",
+      },
+      // 其他 YogaPose 物件 ...
+    ],
+    pagination: {
+      page: 1,
+      limit: 10,
+      total: 100,
+    },
   };
+
+  // 這個結構可以幫助你將 API 返回的資料整齊地處理，同時記錄分頁資料
+
   let items = json.items as Item[];
   console.log("items:", items);
 
