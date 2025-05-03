@@ -5,8 +5,6 @@ import { IonModal } from "@ionic/core/components/ion-modal";
 
 let baseUrl = "https://dae-mobile-assignment.hkit.cc/api";
 
-// let items = [1, 2, 3]
-
 declare var refreshButton: IonButton;
 refreshButton.addEventListener("click", loadItems);
 
@@ -139,7 +137,6 @@ async function loadItems() {
 
   // 這個結構可以幫助你將 API 返回的資料整齊地處理，同時記錄分頁資料
 
-  let items = json.items as Item[];
   console.log("items:", items);
 
   let bookmarkedItemIds = await autoRetryGetBookmarks();

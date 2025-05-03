@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "system",
-    "outFile": "bundle.js",
-    "strict": true
+    "target": "es6",
+    "module": "es6", // ✅ 用 es6 modules
+    "outFile": "bundle.js", // ✅ 合併成一個 JS 檔
+    "strict": true,
+    "sourceMap": false
   },
-  "include": ["app.ts"]
+  "include": ["app.ts"] // ✅ 包含你所有的 ts 檔案
 }
