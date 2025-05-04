@@ -3,6 +3,7 @@ import { IonToast } from "@ionic/core/components/ion-toast";
 import { IonList } from "@ionic/core/components/ion-list";
 import { IonModal } from "@ionic/core/components/ion-modal";
 import { IonSelect } from "@ionic/core/components/ion-select";
+import { IonSearchbar } from "@ionic/core/components/ion-searchbar";
 
 function sayHI(name: string) {
   console.log("Hello, " + name);
@@ -17,8 +18,11 @@ refreshButton.addEventListener("click", loadItems);
 
 declare var categorySelect: IonSelect;
 
+declare var difficultySelect: IonSelect;
+
 declare var loginModal: IonModal;
 declare var errorToast: IonToast;
+declare var searchBar: IonSearchbar;
 
 declare var poseList: IonList;
 
@@ -84,6 +88,8 @@ async function loadItems() {
   let params = new URLSearchParams();
   params.set("page", page.toString());
   params.set("category", categorySelect.value || "");
+  params.set("difficulty", difficultySelect.value || "");
+  params.set("search", searchBar.value || "");
   let res = await fetch(`${baseUrl}/yoga-poses?${params}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
