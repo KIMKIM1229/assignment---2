@@ -447,3 +447,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 });
+
+// 重設按鈕
+const resetButton = document.getElementById("resetButton");
+if (resetButton) {
+  resetButton.addEventListener("click", () => {
+    // 重設搜尋欄
+    if (searchBar) {
+      searchBar.value = "";
+    }
+    
+    // 重設類別選擇
+    if (categorySelect) {
+      categorySelect.value = "";
+    }
+    
+    // 重設難度選擇
+    if (difficultySelect) {
+      difficultySelect.value = "";
+    }
+    
+    // 重設頁碼
+    page = 1;
+    
+    // 重新載入項目
+    loadItems();
+  });
+}
