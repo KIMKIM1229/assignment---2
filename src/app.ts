@@ -96,7 +96,11 @@ async function loadItems() {
   });
   let json = (await res.json()) as YogaPoseResult;
   if (json.error) {
-    errorToast.message = json.error;
+    if (json.error.includes("Error injected for testing purposes")) {
+      errorToast.message = "網絡不穩，請刷新頁面";
+    } else {
+      errorToast.message = json.error;
+    }
     errorToast.present();
     poseList.textContent = "";
     return;

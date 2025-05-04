@@ -105,7 +105,13 @@
 
           if (json.error) {
             console.error("Login error:", json.error);
-            errorToast.message = json.error;
+            if (json.error.includes("Error injected for testing purposes")) {
+              errorToast.message = "網絡連接失敗，請重試";
+            } else if (json.error.includes("network")) {
+              errorToast.message = "網絡連接失敗，請檢查網絡後重試";
+            } else {
+              errorToast.message = json.error;
+            }
             errorToast.present();
             return;
           }
