@@ -40,6 +40,12 @@ nextPageButton.addEventListener("click", () => {
   loadItems();
 });
 
+declare var loadMoreButton: IonButton;
+loadMoreButton.addEventListener("click", () => {
+  page++;
+  loadItems();
+});
+
 let skeletonItem = poseList.querySelector(".skeleton-item")!;
 skeletonItem.remove();
 
@@ -81,7 +87,9 @@ interface YogaPoseResult {
 
 async function loadItems() {
   console.log("loading items...");
-  poseList.textContent = "";
+  if (page === 1) {
+    poseList.textContent = "";
+  }
   poseList.appendChild(skeletonItem.cloneNode(true));
   poseList.appendChild(skeletonItem.cloneNode(true));
   poseList.appendChild(skeletonItem.cloneNode(true));
@@ -102,7 +110,9 @@ async function loadItems() {
       errorToast.message = json.error;
     }
     errorToast.present();
-    poseList.textContent = "";
+    if (page === 1) {
+      poseList.textContent = "";
+    }
     return;
   }
   errorToast.dismiss();
@@ -111,91 +121,20 @@ async function loadItems() {
 
   prevPageButton.hidden = json.pagination.page <= 1;
   nextPageButton.hidden = json.pagination.page >= maxPage;
+  loadMoreButton.hidden = json.pagination.page >= maxPage;
 
-  //  正確定義 item 陣列
-  let items: YogaPose[] = json.items; // 這裡修正為正確的資料層次
-  console.log("items:", items);
-
-  // 假設你從 API 獲得回應，使用 YogaPoseResult 來接收
-  // const yogaPoseResult: YogaPoseResult = {
-  //   error: "", // 沒有錯誤
-  //   items: [
-  //     {
-  //       id: 26,
-  //       tags: ["休息式", "整合練習成果", "深度休息", "更新"],
-  //       sanskrit_name: "Savasana",
-  //       difficulty: "beginner",
-  //       duration_minutes: 10,
-  //       instructor: "張美玲",
-  //       created_at: "2025-04-16 05:12:03",
-  //       updated_at: "2025-04-20 09:43:13",
-  //       title: "屍式",
-  //       description:
-  //         "一個放鬆姿勢，讓身體能夠整合練習成果，同時促進深度休息和更新。",
-  //       category: "休息式",
-  //       image_url:
-  //         "https://cc.tvbs.com.tw/img/program/_data/i/upload/2019/10/24/20191024112019-74665b2d-me.jpg",
-  //       video_url: "https://www.youtube.com/watch?v=Zn8frjdsnYQ",
-  //       published_at: "2024-03-01",
-  //       benefits: ["減輕壓力", "促進深度放鬆", "降低血壓", "改善睡眠品質"],
-  //     },
-  //     {
-  //       id: 29,
-  //       tags: ["坐姿式", "冥想", "髖部", "膝蓋", "靈活度", "心靈清明"],
-  //       sanskrit_name: "Padmasana",
-  //       difficulty: "advanced",
-  //       duration_minutes: 10,
-  //       instructor: "田中幸子",
-  //       created_at: "2025-04-16 05:12:03",
-  //       updated_at: "2025-04-20 09:43:13",
-  //       title: "蓮花式",
-  //       description:
-  //         "一個冥想坐姿，需要髖部和膝蓋的靈活度，同時促進心靈清明。",
-  //       category: "坐姿式",
-  //       image_url:
-  //         "https://theme.npm.edu.tw/3d/att/collection/04001032/17009589.jpg",
-  //       video_url: "https://www.youtube.com/watch?v=Cnq4LojdhYQ",
-  //       published_at: "2024-02-25",
-  //       benefits: [
-  //         "提升冥想專注力",
-  //         "打開髖部",
-  //         "平靜神經系統",
-  //         "促進良好姿勢",
-  //       ],
-  //     },
-  //     {
-  //       id: 22,
-  //       tags: ["開髖式", "髖部", "下背部", "伸展大腿"],
-  //       sanskrit_name: "Eka Pada Rajakapotasana",
-  //       difficulty: "intermediate",
-  //       duration_minutes: 5,
-  //       instructor: "吳雅琪",
-  //       created_at: "2025-04-16 05:12:01",
-  //       updated_at: "2025-04-20 09:43:13",
-  //       title: "鴿子式",
-  //       description:
-  //         "一個開髖式姿勢，可以放鬆髖部和下背部的緊張，同時伸展大腿。",
-  //       category: "開髖式",
-  //       image_url: "https://i.ytimg.com/vi/nYSq6XT8VTU/maxresdefault.jpg",
-  //       video_url: "https://www.youtube.com/watch?v=0OPlqNF2OWY",
-  //       published_at: "2024-02-20",
-  //       benefits: ["打開髖關節", "舒緩下背部緊張", "伸展大腿", "平靜心神"],
-  //     },
-  //   ],
-  //   pagination: {
-  //     page: 1,
-  //     limit: 3,
-  //     total: 10,
-  //   },
-  // };
-
-  // 這個結構可以幫助你將 API 返回的資料整齊地處理，同時記錄分頁資料
-
+  let items: YogaPose[] = json.items;
   console.log("items:", items);
 
   let bookmarkedItemIds = await autoRetryGetBookmarks();
 
-  poseList.textContent = "";
+  if (page === 1) {
+    poseList.textContent = "";
+  }
+
+  const skeletonItems = poseList.querySelectorAll(".skeleton-item");
+  skeletonItems.forEach(item => item.remove());
+
   for (let item of items) {
     let card = itemCardTemplate.cloneNode(true) as HTMLIonCardElement;
 
