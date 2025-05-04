@@ -31,19 +31,18 @@
           <ion-searchbar id="searchBar" placeholder="搜尋瑜伽名稱或功效..." debounce="300"></ion-searchbar>
           
           <div class="filter-row">
-          <ion-select id="categorySelect" placeholder="等級分類" interface="popover">
-            <ion-select-option value="">等級分類</ion-select-option>
-            <ion-select-option value="初階">初階</ion-select-option>
-            <ion-select-option value="中階">中階</ion-select-option>
-            <ion-select-option value="高階">高階</ion-select-option>            
+          <ion-select id="categorySelect" placeholder="類別" interface="popover">
+            <ion-select-option value="">類別</ion-select-option>
+            <ion-select-option value="休息式">休息式</ion-select-option>
+            <ion-select-option value="坐姿式">坐姿式</ion-select-option>
+            <ion-select-option value="開髖式">開髖式</ion-select-option>            
           </ion-select>
 
-          <ion-select id="typeSelect" placeholder="類型" interface="popover">
-            <ion-select-option value="">類型</ion-select-option>
-            <ion-select-option value="拉伸">拉伸</ion-select-option>
-            <ion-select-option value="強化">強化</ion-select-option>
-            <ion-select-option value="平衡">平衡</ion-select-option>
-            <ion-select-option value="放鬆">放鬆</ion-select-option>
+          <ion-select id="difficultySelect" placeholder="等級" interface="popover">
+            <ion-select-option value="">等級</ion-select-option>
+            <ion-select-option value="beginner">beginner</ion-select-option>
+            <ion-select-option value="advanced">advanced</ion-select-option>
+            <ion-select-option value="intermediate">intermediate</ion-select-option>
           </ion-select>
 
           <ion-select id="bodyPartSelect" placeholder="部位" interface="popover">
@@ -97,8 +96,8 @@
         </ion-item>
         <ion-card class="item-card">
           <ion-card-header>
-            <ion-card-title class="item-title"></ion-card-title>
             <ion-card-subtitle class="item-subtitle"></ion-card-subtitle>
+            <ion-card-title class="item-title"></ion-card-title>            
             <ion-button class="favorite-btn" fill="clear">
               <ion-icon name="star" slot="icon-only"></ion-icon>
             </ion-button>
@@ -106,6 +105,8 @@
           <ion-card-content>
             <p class="item-details"></p>
             <div class="item-date"></div>
+            <div class="item-instructor"></div>
+            <div class="item-duration_minutes"></div>
             <div class="media-content">
               <img class="course-image" src="" loading="lazy" />
               <div class="video-container">
@@ -113,6 +114,8 @@
                 <video controls>
                   <source src="" type="video/mp4" />
                 </video>
+                <div class="item-created_at"></div>
+                <div class="item-updated_at"></div>
               </div>
             </div>
             <div class="tag-container">

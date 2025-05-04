@@ -2,6 +2,8 @@ import { IonButton } from "@ionic/core/components/ion-button";
 import { IonToast } from "@ionic/core/components/ion-toast";
 import { IonList } from "@ionic/core/components/ion-list";
 import { IonModal } from "@ionic/core/components/ion-modal";
+import { IonSelect } from "@ionic/core/components/ion-select";
+
 function sayHI(name: string) {
   console.log("Hello, " + name);
 }
@@ -12,6 +14,8 @@ let baseUrl = "https://dae-mobile-assignment.hkit.cc/api";
 let refreshButton =
   document.querySelector<HTMLIonButtonElement>("#refreshButton")!;
 refreshButton.addEventListener("click", loadItems);
+
+declare var categorySelect: IonSelect;
 
 declare var loginModal: IonModal;
 declare var errorToast: IonToast;
@@ -47,13 +51,12 @@ interface YogaPose {
   title: string;
   sanskrit_name: string;
   difficulty: string;
-  duration_minutes: string;
+  duration_minutes: number;
   instructor: string;
   created_at: string;
   updated_at: string;
   category: string;
   description: string;
-  practice: string;
   tags: string[];
   image_url: string;
   video_url: string;
@@ -80,6 +83,7 @@ async function loadItems() {
   poseList.appendChild(skeletonItem.cloneNode(true));
   let params = new URLSearchParams();
   params.set("page", page.toString());
+  params.set("category", categorySelect.value || "");
   let res = await fetch(`${baseUrl}/yoga-poses?${params}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
@@ -214,6 +218,22 @@ async function loadItems() {
     card.querySelector(
       ".item-date"
     )!.textContent = `日期: ${item.published_at}`;
+
+    card.querySelector(
+      ".item-instructor"
+    )!.textContent = `導師: ${item.instructor}`;
+
+    card.querySelector(
+      ".item-duration_minutes"
+    )!.textContent = `時長(分鐘): ${item.duration_minutes}`;
+
+    card.querySelector(
+      ".item-created_at"
+    )!.textContent = `Created at: ${item.created_at}`;
+
+    card.querySelector(
+      ".item-updated_at"
+    )!.textContent = `Updated at: ${item.updated_at}`;
 
     card.querySelector<HTMLImageElement>(".course-image")!.src = item.image_url;
 
