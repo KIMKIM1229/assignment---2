@@ -46,7 +46,7 @@
   <body>
     <ion-app>
       <ion-header>
-        <ion-toolbar color="primary">
+        <ion-toolbar color="secondary">
           <ion-title>登錄</ion-title>
         </ion-toolbar>
       </ion-header>
@@ -60,7 +60,9 @@
             <ion-label position="floating">密碼</ion-label>
             <ion-input id="password" type="password"></ion-input>
           </ion-item>
-          <ion-button expand="block" id="loginButton">登錄</ion-button>
+          <ion-button expand="block" id="loginButton" color="secondary"
+            >登錄</ion-button
+          >
           <div class="register-link">
             <a href="register.html">還沒有帳戶？點擊注冊</a>
           </div>
@@ -120,7 +122,7 @@
             successToast.message = "登錄成功";
             successToast.present();
             setTimeout(() => {
-              window.location.href = "apps.html";
+              window.location.href = "index.html";
             }, 1500);
           } else {
             console.error("No token received:", json);
