@@ -19,6 +19,11 @@
       <ion-header>
         <ion-toolbar class="soft-toolbar">
           <ion-title class="title-bold">Yoga Pose List</ion-title>
+         <ion-buttons slot="end">
+          <ion-button  id="refreshButton">
+            <ion-icon  name="refresh" slot="icon-only"></ion-icon>
+          </ion-button>
+         </ion-buttons>
         </ion-toolbar>
     </ion-header>
           
@@ -59,10 +64,66 @@
       </ion-header>
 
   
+    <ion-button id="prevPageButton" class="reset-btn">prev</ion-button>
+    <ion-button id="nextPageButton" class="reset-btn">next</ion-button>
     <ion-button id="resetButton" class="reset-btn">重設</ion-button>
 
     <ion-content>
-      <ion-list id="poseList"></ion-list>
+      <ion-list id="poseList">
+        <ion-item class="skeleton-item">
+          <ion-thumbnail slot="start">
+            <ion-skeleton-text animated="true"></ion-skeleton-text>
+          </ion-thumbnail>
+          <ion-label>
+            <h3>
+              <ion-skeleton-text
+                animated="true"
+                style="width: 80%"
+              ></ion-skeleton-text>
+            </h3>
+            <p>
+              <ion-skeleton-text
+                animated="true"
+                style="width: 60%"
+              ></ion-skeleton-text>
+            </p>
+            <p>
+              <ion-skeleton-text
+                animated="true"
+                style="width: 30%"
+              ></ion-skeleton-text>
+            </p>
+          </ion-label>
+        </ion-item>
+        <ion-card class="item-card">
+          <ion-card-header>
+            <ion-card-title class="item-title"></ion-card-title>
+            <ion-card-subtitle class="item-subtitle"></ion-card-subtitle>
+            <ion-button class="favorite-btn" fill="clear">
+              <ion-icon name="star" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="item-details"></p>
+            <div class="item-date"></div>
+            <div class="media-content">
+              <img class="course-image" src="" loading="lazy" />
+              <div class="video-container">
+                <iframe src="" frameborder="0" allowfullscreen></iframe>
+                <video controls>
+                  <source src="" type="video/mp4" />
+                </video>
+              </div>
+            </div>
+            <div class="tag-container">
+              <ion-chip class="tag" data-type="sample-tag">
+                sample-tag-name
+              </ion-chip>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-list>
+      <ion-toast id="errorToast" duration="5000" color="danger"></ion-toast>
     </ion-content>
   </ion-app>
 

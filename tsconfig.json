@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
     "target": "es6",
-    "module": "es6", // ✅ 用 es6 modules
-    "outFile": "bundle.js", // ✅ 合併成一個 JS 檔
-    "strict": true,
-    "sourceMap": false
+    "module": "CommonJS", // 或 "iife"
+    "strict": true
   },
-  "include": ["app.ts"] // ✅ 包含你所有的 ts 檔案
+  "include": ["src/**/*"] // ✅ 包含你所有的 ts 檔案
 }
