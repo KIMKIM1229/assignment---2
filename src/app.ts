@@ -18,8 +18,6 @@ refreshButton.addEventListener("click", loadItems);
 
 declare var categorySelect: IonSelect;
 
-declare var difficultySelect: IonSelect;
-
 declare var loginModal: IonModal;
 declare var errorToast: IonToast;
 declare var searchBar: IonSearchbar;
@@ -96,7 +94,6 @@ async function loadItems() {
   let params = new URLSearchParams();
   params.set("page", page.toString());
   params.set("category", categorySelect.value || "");
-  params.set("difficulty", difficultySelect.value || "");
   params.set("search", searchBar.value || "");
   let res = await fetch(`${baseUrl}/yoga-poses?${params}`, {
     method: "GET",
@@ -155,18 +152,21 @@ async function loadItems() {
       }
 
       try {
-        if (isBookmarked) {
+        const currentIsBookmarked = bookmarkedItemIds.includes(item.id);
+        if (currentIsBookmarked) {
           await unBookmarkItem(item.id);
           favoriteIcon.name = "star-outline";
           errorToast.message = "已取消收藏";
+          // 從本地收藏列表中移除
+          bookmarkedItemIds = bookmarkedItemIds.filter(id => id !== item.id);
         } else {
           await bookmarkItem(item.id);
           favoriteIcon.name = "star";
           errorToast.message = "已加入收藏";
+          // 添加到本地收藏列表
+          bookmarkedItemIds.push(item.id);
         }
         errorToast.present();
-        // 更新本地收藏列表
-        bookmarkedItemIds = await getBookmarks();
       } catch (error) {
         if (String(error).includes("Error injected for testing purposes")) {
           errorToast.message = "網絡不穩，請重試";
@@ -437,11 +437,6 @@ if (resetButton) {
     // 重設類別選擇
     if (categorySelect) {
       categorySelect.value = "";
-    }
-    
-    // 重設難度選擇
-    if (difficultySelect) {
-      difficultySelect.value = "";
     }
     
     // 重設頁碼
