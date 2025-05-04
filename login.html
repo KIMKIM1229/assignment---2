@@ -121,6 +121,15 @@
             });
             successToast.message = "登錄成功";
             successToast.present();
+            
+            // 更新按鈕狀態
+            const authButtons = document.getElementById("authButtons");
+            const logoutButtons = document.getElementById("logoutButtons");
+            if (authButtons && logoutButtons) {
+              authButtons.style.display = "none";
+              logoutButtons.style.display = "block";
+            }
+            
             setTimeout(() => {
               window.location.href = "index.html";
             }, 1500);

@@ -308,7 +308,14 @@ async function handleAuth(mode: "signup" | "login") {
   token = json.token;
   localStorage.setItem("token", json.token);
   loginModal.dismiss();
-  // TODO load bookmarks
+  
+  // 更新按鈕顯示狀態
+  const authButtons = document.getElementById("authButtons");
+  const logoutButtons = document.getElementById("logoutButtons");
+  if (authButtons && logoutButtons) {
+    authButtons.hidden = true;
+    logoutButtons.hidden = false;
+  }
 }
 
 async function bookmarkItem(item_id: number) {
@@ -356,3 +363,87 @@ async function autoRetryGetBookmarks() {
   }
   throw error;
 }
+
+// 檢查登入狀態
+async function checkAuth() {
+  const token = localStorage.getItem("token") || "";
+  console.log("Token from localStorage:", token);
+  if (!token) {
+    console.log("No token found");
+    return false;
+  }
+
+  let error = null;
+  for (let i = 0; i < 3; i++) {
+    try {
+      console.log("Checking auth with token:", token.substring(0, 10) + "...");
+      const res = await fetch(`${baseUrl}/auth/check`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log("Auth check status:", res.status);
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Auth check response:", text);
+        errorToast.message = `認證失敗，服務器返回 ${res.status}: ${text}`;
+        errorToast.present();
+        if (res.status === 401 || res.status === 403) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("username");
+          return false;
+        }
+        continue;
+      }
+
+      const json = await res.json();
+      console.log("Auth check JSON:", json);
+      if (!json.user_id) {
+        console.log("Invalid user_id");
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        return false;
+      }
+
+      return true;
+    } catch (err) {
+      error = err;
+      console.error("Check auth error, retrying:", err);
+    }
+  }
+
+  console.error("All retries failed:", error);
+  errorToast.message = "認證失敗，請檢查網絡或稍後再試";
+  errorToast.present();
+  return false;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const authButtons = document.getElementById("authButtons");
+  const logoutButtons = document.getElementById("logoutButtons");
+  const loginButton = document.getElementById("loginButton");
+  const registerButton = document.getElementById("registerButton");
+  const logoutButton = document.getElementById("logoutButton");
+
+  // 檢查登入狀態
+  const isLoggedIn = await checkAuth();
+  
+  if (authButtons && logoutButtons) {
+    if (isLoggedIn) {
+      authButtons.style.display = "none";
+      logoutButtons.style.display = "block";
+    } else {
+      authButtons.style.display = "block";
+      logoutButtons.style.display = "none";
+    }
+  }
+
+  // 登出功能
+  if (logoutButton) {
+    logoutButton.addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      window.location.href = "login.html";
+    });
+  }
+});
