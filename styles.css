@@ -32,16 +32,42 @@ ion-content {
   --color: #34495e; /* 深藍字 */
 }
 
-.reset-btn {
-  --background: #ccc; /* 預設灰色 */
-  --color: #fff; /* 字白色 */
-  --border-radius: 12px;
-  width: 100%; /* 🔥 令按鈕變成打橫一條長條型 */
-  display: block;
+.reset-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 1rem;
-  transition: background-color 0.3s ease;
-  margin-left: auto;
-  margin-right: auto;
+}
+
+.reset-btn {
+  --background: #ccc;
+  --color: #fff;
+  --border-radius: 8px;
+  font-size: 14px;
+  height: 32px;
+  padding: 0 12px;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.next-row {
+  display: flex;
+  gap: 1rem; /* 上一頁/下一頁間距 */
+}
+
+.next-btn {
+  --background: #ccc;
+  --color: #fff;
+  --border-radius: 8px;
+  font-size: 14px;
+  height: 32px;
+  padding: 0 12px;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.next-btn:active {
+  --background: #92a8d1; /* 按住時閃藍色 */
 }
 
 .reset-btn:active {
