@@ -126,7 +126,8 @@ async function loadItems() {
   let items: YogaPose[] = json.items;
   console.log("items:", items);
 
-  let bookmarkedItemIds = await autoRetryGetBookmarks();
+  let bookmarkedItemIds = await getBookmarks();
+  console.log("Bookmarked items:", bookmarkedItemIds);
 
   if (page === 1) {
     poseList.textContent = "";
@@ -144,9 +145,9 @@ async function loadItems() {
 
     let favoriteBtn = card.querySelector(".favorite-btn")!;
     let favoriteIcon = favoriteBtn.querySelector("ion-icon")!;
-    favoriteIcon.name = bookmarkedItemIds.includes(item.id)
-      ? "star"
-      : "star-outline";
+    const isBookmarked = bookmarkedItemIds.includes(item.id);
+    favoriteIcon.name = isBookmarked ? "star" : "star-outline";
+    
     favoriteBtn.addEventListener("click", async () => {
       if (!token) {
         loginModal.present();
@@ -154,11 +155,24 @@ async function loadItems() {
       }
 
       try {
-        await bookmarkItem(item.id);
-        favoriteIcon.name = "star";
-        errorToast.dismiss();
+        if (isBookmarked) {
+          await unBookmarkItem(item.id);
+          favoriteIcon.name = "star-outline";
+          errorToast.message = "已取消收藏";
+        } else {
+          await bookmarkItem(item.id);
+          favoriteIcon.name = "star";
+          errorToast.message = "已加入收藏";
+        }
+        errorToast.present();
+        // 更新本地收藏列表
+        bookmarkedItemIds = await getBookmarks();
       } catch (error) {
-        errorToast.message = String(error);
+        if (String(error).includes("Error injected for testing purposes")) {
+          errorToast.message = "網絡不穩，請重試";
+        } else {
+          errorToast.message = String(error);
+        }
         errorToast.present();
       }
     });
@@ -262,36 +276,56 @@ async function handleAuth(mode: "signup" | "login") {
 }
 
 async function bookmarkItem(item_id: number) {
-  let res = await fetch(`${baseUrl}/bookmarks/${item_id}`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  let json = await res.json();
-  if (json.error) {
-    throw json.error;
-  }
-}
-async function unBookmarkItem(item_id: number, icon: HTMLIonIconElement) {
   try {
-    // TODO call server API
-    throw "TODO: call server API";
+    let res = await fetch(`${baseUrl}/bookmarks/${item_id}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    let json = await res.json();
+    if (json.error) {
+      throw json.error;
+    }
+    return true;
   } catch (error) {
-    errorToast.message = String(error);
-    errorToast.present();
+    console.error("Bookmark error:", error);
+    throw error;
   }
 }
+
+async function unBookmarkItem(item_id: number) {
+  try {
+    let res = await fetch(`${baseUrl}/bookmarks/${item_id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    let json = await res.json();
+    if (json.error) {
+      throw json.error;
+    }
+    return true;
+  } catch (error) {
+    console.error("Unbookmark error:", error);
+    throw error;
+  }
+}
+
 async function getBookmarks() {
   if (!token) {
     return [];
   }
-  let res = await fetch(`${baseUrl}/bookmarks`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  let json = await res.json();
-  if (json.error) {
-    throw json.error;
+  try {
+    let res = await fetch(`${baseUrl}/bookmarks`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    let json = await res.json();
+    if (json.error) {
+      throw json.error;
+    }
+    return json.item_ids as number[];
+  } catch (error) {
+    console.error("Get bookmarks error:", error);
+    return [];
   }
-  return json.item_ids as number[];
 }
 
 async function autoRetryGetBookmarks() {
