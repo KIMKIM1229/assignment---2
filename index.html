@@ -15,6 +15,7 @@
       </style>
   </head>
   <body>
+    
     <ion-app>
       <ion-header>
         <ion-toolbar class="soft-toolbar">
@@ -24,6 +25,13 @@
             <ion-icon  name="refresh" slot="icon-only"></ion-icon>
           </ion-button>
          </ion-buttons>
+         
+            <ion-buttons slot="start">
+              <ion-button fill="clear" size="small" href="login.html">登入</ion-button>
+              <ion-button fill="clear" size="small" href="register.html">註冊</ion-button>
+            </ion-buttons>
+            <ion-title>Yoga Pose List</ion-title>
+        
         </ion-toolbar>
     </ion-header>
           
@@ -45,18 +53,6 @@
             <ion-select-option value="intermediate">intermediate</ion-select-option>
           </ion-select>
 
-          <ion-select id="bodyPartSelect" placeholder="部位" interface="popover">
-            <ion-select-option value="">部位</ion-select-option>
-            <ion-select-option value="腿部">腿部</ion-select-option>
-            <ion-select-option value="背部">背部</ion-select-option>
-            <ion-select-option value="肩部">肩部</ion-select-option>
-            <ion-select-option value="臀腿肌">臀腿肌</ion-select-option>
-            <ion-select-option value="脊椎">脊椎</ion-select-option>
-            <ion-select-option value="胸部">胸部</ion-select-option>
-            <ion-select-option value="臀部">臀部</ion-select-option>
-            <ion-select-option value="頸部">頸部</ion-select-option>
-            <ion-select-option value="腹部">腹部</ion-select-option>
-          </ion-select>
           </div>
         </ion-toolbar>
         <div id="itemList"></div>    
